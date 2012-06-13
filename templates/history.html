@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% load mytags %}
+{% block content %}
+  
+  <h2>{{ project.name}} | Total {{ total_diff|floatformat:0 }}</h2>
+  <hr/>
+  {% for week, entries in history.items %}
+    <h3>
+      week {{ week|cut:"w" }}
+    </h3>
+    {% for entry in entries %}
+      <div>
+        {{ entry.started_at|timestamp|date:"H:i" }} -
+        {{ entry.stopped_at|timestamp|date:"H:i" }} =
+        {{ entry.diff|floatformat:0 }}sec
+      </div>
+    {% endfor %}
+    <hr/>
+  {% endfor %}
+{% endblock %}
+

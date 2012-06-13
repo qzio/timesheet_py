@@ -1,0 +1,26 @@
+body {
+  color: #333;
+}
+
+body, table, input, .btn, td, th, p, label {
+  font-size: 20px;
+}
+
+small, .small {
+  font-size: 0.9em;
+}
+h1 {
+  font-size: 30px;
+}
+h2 {
+  font-size: 25px;
+}
+
+.hero-unit h1 {
+  font-size: 45px;
+  text-align: center;
+}
+
+table.project-list td {
+  padding: 0.5em 1em;
+}
