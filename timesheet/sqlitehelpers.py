@@ -49,13 +49,21 @@ def dictfetchone(cursor):
   ]
   return result[0] if len(result) > 0 else None
 
+# execute an sql query that will insert/update
+def dbexec(sql, params):
+  cursor = connection.cursor()
+  cursor.execute(sql, params)
+  transaction.commit_unless_managed()
+  return cursor.rowcount
 
-def project_fetch(cursor, project_id):
+def project_fetch(project_id):
+  cursor = connection.cursor()
   cursor.execute("select * from projects where id = %s limit 1", (project_id,))
   return dictfetchone(cursor)
 
-def project_fetch_all(cursor):
-  cursor.execute('select * from projects')
+def project_fetch_all():
+  cursor = connection.cursor()
+  cursor.execute("select * from projects")
   return dictfetchall(cursor)
 
 def started_project(projects):
@@ -64,16 +72,14 @@ def started_project(projects):
       return project['id']
   return None
 
-def start_track_project(cursor, project_id):
-  r = cursor.execute("update projects set started_at = %s where id = %s",
-                        (int(time.time()), project_id)) 
-  transaction.commit_unless_managed()
-  if cursor.rowcount > 0:
+def start_track_project(project_id):
+  if dbexec("update projects set started_at = %s where id = %s", (int(time.time()), project_id)) > 0:
     return 1
   return 0
 
-def stop_track_project(cursor, project_id):
-  project = project_fetch(cursor, project_id)
+def stop_track_project(project_id):
+
+  project = project_fetch(project_id)
   if project == None:
     print "no project found..."
     return 0
