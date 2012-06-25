@@ -34,6 +34,12 @@ def project_to_dict(project_tuple):
 
 
 # actually used
+
+# projects:
+# CREATE TABLE projects (id integer primary key, name varchar(255), price integer, started_at integer);
+# tracked_times
+# CREATE TABLE tracked_times (id integer primary key, project_id integer, started_at integer, stopped_at integer, diff integer);
+
 def dictfetchall(cursor):
   desc = cursor.description
   return [
@@ -64,7 +70,8 @@ def project_fetch(project_id):
 def project_fetch_all():
   cursor = connection.cursor()
   cursor.execute("select * from projects")
-  return dictfetchall(cursor)
+  projects = dictfetchall(cursor)
+  return projects
 
 def started_project(projects):
   for project in projects:
@@ -107,6 +114,13 @@ def stop_track_project(project_id):
   return 0
 
 
+def project_total(project_id):
+  cursor = connection.cursor()
+  cursor.execute("select sum(diff) as total from tracked_times where project_id = %s", (int(project_id,)))
+  row = dictfetchone(cursor)
+  total_hours = row['total'] / 60.0 / 60.0
+  return total_hours
+
 def project_history(project_id):
   cursor = connection.cursor()
   cursor.execute("select * from tracked_times where project_id = %s order by stopped_at desc", (project_id,))
@@ -119,8 +133,10 @@ def project_history(project_id):
     week = "w%s" % iso_tuple[1]
     if (week not in result):
       result[week] = []
+    row['hour_diff'] = row['diff'] / 60 / 60
     result[week].append(row)
     total = total + row['diff']
 
   print "result: %s" % (result,)
+  total = total / 60.0 / 60.0
   return (total, result)

@@ -2,7 +2,7 @@
 {% load mytags %}
 {% block content %}
   
-  <h2>{{ project.name}} | Total {{ total_diff|floatformat:0 }}</h2>
+  <h2>{{ project.name}} | Total {{ total_diff|floatformat:2 }}h</h2>
   <hr/>
   {% for week, entries in history.items %}
     <h3>
@@ -12,7 +12,7 @@
       <div>
         {{ entry.started_at|timestamp|date:"H:i" }} -
         {{ entry.stopped_at|timestamp|date:"H:i" }} =
-        {{ entry.diff|floatformat:0 }}sec
+        {{ entry.hour_diff|floatformat:2 }}h
       </div>
     {% endfor %}
     <hr/>
