@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% load mytags %}
+{% block content %}
+<table class="table">
+    <tr><th>Period</th><th>Time</th><th>Sum</th></tr>
+    {% for row in archive %}
+        <tr>
+            <td>{{ row.period }}</td>
+            <td>{{ row.total_time|floatformat:2 }}</td>
+            <td>{{ row.total_sum }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

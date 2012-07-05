@@ -1,21 +1,27 @@
 {% extends "layout.html" %}
 {% load mytags %}
 {% block content %}
-  
-  <h2>{{ project.name}} | Total {{ total_diff|floatformat:2 }}h</h2>
-  <hr/>
-  {% for week, entries in history.items %}
-    <h3>
-      week {{ week|cut:"w" }}
-    </h3>
-    {% for entry in entries %}
-      <div>
-        {{ entry.started_at|timestamp|date:"H:i" }} -
-        {{ entry.stopped_at|timestamp|date:"H:i" }} =
-        {{ entry.hour_diff|floatformat:2 }}h
-      </div>
-    {% endfor %}
+    <h2>{{ project.name}} | Total {{ total_diff|floatformat:2 }}h <small><a href="/"> back</a></small></h2>
     <hr/>
-  {% endfor %}
+    {% for week, entries in history.items %}
+        <h3>
+            week {{ week|cut:"w" }}
+        </h3>
+        {% for entry in entries %}
+            <div>
+                {{ entry.started_at|timestamp|date:"H:i" }} -
+                {{ entry.stopped_at|timestamp|date:"H:i" }} =
+                {{ entry.hour_diff|floatformat:2 }}h
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <br/>
+    <form method="post" action="/projects/{{ project.id }}/archive">{% csrf_token %}
+        <div class="actions well">
+            <input type="text" name="period" value=""/>
+            <input type="submit" class="btn btn-primary" value="Archive"/>
+        </div>
+    </form>
+    <a href="/projects/{{ project.id }}/archives">the archive</a>
 {% endblock %}
 

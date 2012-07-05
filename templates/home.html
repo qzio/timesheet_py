@@ -19,20 +19,26 @@
             <small>start</small>
           {% endif %}
         </td>
-        <td>
+        <td style="width:100%">
           {% if project_started == project.id %}
             started at {{ project.started_at|timestamp|date:"H:i"}}
           {% else %}
-            xx.xx
+            {{ project.current_time|floatformat:2 }}
           {% endif %}
         </td>
-        <td><a class="small" href="/projects/{{ project.id }}/history">history</a></td>
-        <td><a class="small" href="/projects/{{ project.id }}/delete">delete</a></td>
+        <td><a class="small" href="/projects/{{ project.id }}/history"><i class="icon-align-justify"></i></a></td>
+        <td>
+            <form method="post" action="/projects/{{ project.id }}/delete">{% csrf_token %}
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit"><i class="icon-remove"></i></button>
+            </form>
+        </td>
       </tr>
     {% endfor %}
   </table>
 
-  <div class="actions">
-    <a href="/projectwizard">create project</a>
+  <br/>
+  <div class="actions well" >
+    <a class="btn btn-primary" href="/projectwizard">create project</a>
   </div>
 {% endblock %}
