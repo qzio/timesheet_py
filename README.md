@@ -17,10 +17,12 @@
 
 ## todo
 
-- inital create table script. (you have to create the tables by your self currently)
+- json API
 
-- mark weeks as paid/invoiced, remove them from history
-
-- clean up
+- multi user support, connect by different oauth-able services such as
+  - github
+  - faceoobk
+  - twitter
+  - google
 
 - etc...

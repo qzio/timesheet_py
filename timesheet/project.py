@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 import pickle
 
+# see create_tables.py
 # CREATE TABLE projects (id integer primary key, name varchar(255), price integer, started_at integer, current_time integer);
 # CREATE TABLE tracked_times (id integer primary key, project_id integer, started_at integer, stopped_at integer, diff integer);
 # CREATE TABLE archived_history (project_id integer, period varchar(100), total_time integer, total_sum integer, period_data text);
