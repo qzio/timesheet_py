@@ -69,6 +69,18 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+# this is default no
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.csrf",
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages")
+
+
 # added by j
 SESSION_ENGINE = "django.contrib.sessions.backends.file"
 

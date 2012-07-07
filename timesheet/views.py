@@ -2,6 +2,7 @@
 # Create your views here.
 import sqlite3
 from django.http import HttpResponse
+from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.contrib.formtools.wizard.views import SessionWizardView
 
@@ -14,10 +15,12 @@ from django.db import connection, transaction
 from django.core.context_processors import csrf
 
 def home(request):
+    if (not request.user.is_authenticated()):
+        return redirect('/login')
     projects = project_fetch_all()
-    c = {'projects':projects,
-          'project_started':started_project(projects)}
-    c.update(csrf(request)) # am I doing this wrong? is there a better way?
+    c = RequestContext(request, {'projects':projects,
+          'project_started':started_project(projects)})
+    #c.update(csrf(request)) # am I doing this wrong? is there a better way?
     return render_to_response('home.html', c)
 
 def projects_start(request, project_id):

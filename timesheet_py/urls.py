@@ -1,5 +1,7 @@
 
 from django.conf.urls.defaults import patterns, include, url
+
+from django.contrib.auth.views import *
 from timesheet.views import *
 from timesheet.forms import *
 
@@ -11,6 +13,9 @@ from common.url_helpers import *
 
 urlpatterns = patterns('',
     url(r'^$', 'timesheet.views.home', name='home'),
+    url(r'^accounts/profile/$', 'timesheet.views.home'),
+    url(r'^login/$', 'django.contrib.auth.views.login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', dict(next_page='/login')),
     url(r'^projects/(?P<project_id>\d+)/start$',   method_splitter, {'POST':  projects_start}, name='projects_start'),
     url(r'^projects/(?P<project_id>\d+)/stop$',    method_splitter, {'POST':  projects_stop}, name='projects_stop'),
     url(r'^projects/(?P<project_id>\d+)/delete$',  method_splitter, {'DELETE':projects_delete}),
