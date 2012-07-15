@@ -19,10 +19,10 @@
 
 - json API
 
-- multi user support, connect by different oauth-able services such as
+- authenticate by different oauth-able services such as
   - github
   - faceoobk
   - twitter
   - google
 
-- etc...
+- ...?
