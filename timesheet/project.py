@@ -58,19 +58,11 @@ class Project:
         started_at = current_project['started_at']
         stopped_at = int(time.time())
         diff = (stopped_at - started_at)
-
-        print "will add a diff of %s" % diff
-
         old_current_time = current_project['current_time'] if (current_project['current_time'] > 0.0) else 0
-
-        print "old current_Time : %s" % old_current_time
         project_current_time = (old_current_time + diff) / 60 / 60
 
-        print "new current time: %s" % project_current_time
-
-
         updated_project_rows = dbexec("update projects set "
-                "started_at = 0, current_time = %s where id = %s",
+                "started_at = 0, `current_time` = %s where id = %s",
                 (project_current_time, project_id))
         if updated_project_rows > 0:
             updated_tracked_rows = dbexec("insert into tracked_times "
@@ -122,7 +114,7 @@ class Project:
                 "(%s, %s, %s, %s ,%s)",
                 (project_id, period, total_time, total_sum, pickle.dumps(tracked_times)))
         dbexec("delete from tracked_times where project_id = %s", (project_id,))
-        dbexec("update projects set current_time = 0 where id = %s", (project_id,))
+        dbexec("update projects set `current_time` = 0 where id = %s", (project_id,))
 
     def archive_list(self, project_id):
         project = self.project(project_id)
