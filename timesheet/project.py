@@ -58,18 +58,18 @@ class Project:
         started_at = current_project['started_at']
         stopped_at = int(time.time())
         diff = (stopped_at - started_at)
-        old_current_time = current_project['current_time'] if (current_project['current_time'] > 0.0) else 0
-        project_current_time = (old_current_time + diff) / 60 / 60
+        old_current_time = current_project['current_time'] if (current_project['current_time'] > 0.0) else 0.0
+        project_current_time = (old_current_time + diff) / 60 / 60.0
 
         updated_project_rows = dbexec("update projects set "
                 "started_at = 0, `current_time` = %s where id = %s",
                 (project_current_time, project_id))
-        if updated_project_rows > 0:
+        if updated_project_rows > 0.0:
             updated_tracked_rows = dbexec("insert into tracked_times "
                     "(project_id, started_at, stopped_at, diff) values "
                     "(%s, %s, %s, %s)",
                     (project_id, started_at, stopped_at, diff))
-            if updated_tracked_rows > 0:
+            if updated_tracked_rows > 0.0:
                 return 1
         return 0
 
@@ -94,7 +94,6 @@ class Project:
             result[week].append(row)
             total = total + row['diff']
 
-        #print "result: %s" % (result,)
         total = total / 60.0 / 60.0
         return (project, total, result)
 
@@ -108,7 +107,7 @@ class Project:
         if project == None:
             return 0
 
-        total_time = total * 60 * 60 # better save it in seconds
+        total_time = total * 60.0 * 60.0 # better save it in seconds
         total_sum = total * project["price"]
         dbexec("insert into archived_history (project_id, period, total_time, total_sum, period_data) VALUES "
                 "(%s, %s, %s, %s ,%s)",
@@ -123,7 +122,3 @@ class Project:
             return []
         return fetchall("select * from archived_history where project_id = %s",
                 (int(project['id']),))
-
-
-
-
