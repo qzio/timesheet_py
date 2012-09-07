@@ -4,8 +4,8 @@
   <table class="project-list">
     {% for project in projects %}
       <tr>
-        <td>[{{ project.name }}]</td>
-        <td>[{{ project.price }}]</td>
+          <td>[<a href="/projects/{{ project.id }}/edit">{{ project.name }}</a>]</td>
+        <td class="hidden-phone">[{{ project.price }}]</td>
         <td>
           {% if project_started == project.id %}
           <form action="{% url projects_stop project.id %}" method="post">{% csrf_token %}
@@ -19,7 +19,7 @@
             <small>start</small>
           {% endif %}
         </td>
-        <td style="width:100%">
+        <td class="hidden-phone" style="width:100%">
           {% if project_started == project.id %}
             started at {{ project.started_at|timestamp|date:"H:i"}}
           {% else %}
@@ -27,7 +27,7 @@
           {% endif %}
         </td>
         <td><a class="small" href="/projects/{{ project.id }}/history"><i class="icon-align-justify"></i></a></td>
-        <td>
+        <td class="hidden-phone">
             <form method="post" action="/projects/{{ project.id }}/delete">{% csrf_token %}
                 <input type="hidden" name="_method" value="delete"/>
                 <button type="submit"><i class="icon-remove"></i></button>

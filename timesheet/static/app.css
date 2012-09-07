@@ -3,24 +3,35 @@ body {
 }
 
 body, table, input, .btn, td, th, p, label {
-  font-size: 20px;
+  font-size: 15pt;
+  line-height: 120%;
 }
 
 small, .small {
   font-size: 0.9em;
 }
 h1 {
-  font-size: 30px;
+  font-size: 3em;
 }
 h2 {
-  font-size: 25px;
+  font-size: 2.5em;
 }
 
 .hero-unit h1 {
-  font-size: 45px;
+  font-size: 4.5em;
   text-align: center;
 }
 
 table.project-list td {
   padding: 0.5em 1em;
+}
+
+@media (max-width: 979px) {
+  .hero-unit h1, h1 {
+    font-size: 1.5em;
+  }
+  h2 {
+    font-size: 1.2em;
+  }
+
 }

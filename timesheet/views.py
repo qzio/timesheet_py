@@ -12,10 +12,12 @@ from project import Project
 def home(request):
     if (not request.user.is_authenticated()):
         return redirect('/login')
+    f = request.GET.get('flash','')
     p = Project(request.user.id)
     projects = p.project_list()
     started_projects = p.started()
     ctx = RequestContext(request, {
+        "flash": f,
         "projects":projects,
         "project_started":started_projects})
     return render_to_response('home.html', ctx)
@@ -79,6 +81,19 @@ def projects_archive_list(request, project_id):
     archive = p.archive_list(project_id)
     return render_to_response('archive.html', {"archive":archive})
 
+def project_edit(request, project_id):
+    p = Project(request.user.id)
+    project = p.project(project_id)
+    c = RequestContext(request, {
+        "project": project
+    })
+    return render_to_response('project.html', c)
+
+def project_update(request, project_id):
+    msg = "updated project_id %s" % project_id
+    return redirect("/?flash=%s" % msg)
+
+
 # the project wizard
 # @todo move sql to another file
 class ProjectWizard(SessionWizardView):
@@ -97,6 +112,7 @@ class ProjectWizard(SessionWizardView):
         if p.create_project(form_data):
             msg = "successfully created project"
         return redirect("/?flash=%s" % (msg,))
+
 
 # "private" methods...?
 def project_not_found(project_id):

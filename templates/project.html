@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% load mytags %}
+{% block content %}
+<div class="row">
+  <div class="span10 offset1">
+    <form class="form-horizontal" method="post">{% csrf_token %}
+      <input type="hidden" name="_method" value="patch"/>
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label">Name</label>
+          <div class="controls">
+            <input type="text" name="name" value="{{ project.name }}"/>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Price</label>
+          <div class="controls">
+            <input type="text" name="price" value="{{ project.price }}"/>
+          </div>
+        </div>
+        <div class="actions control-group well">
+          <input type="submit" class="btn btn-primary"/>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^projects/(?P<project_id>\d+)/history$', method_splitter, {'GET':   projects_history}),
     url(r'^projects/(?P<project_id>\d+)/archive$', method_splitter, {'POST':   projects_archive}),
     url(r'^projects/(?P<project_id>\d+)/archives$', method_splitter, {'GET':   projects_archive_list}),
+    url(r'^projects/(?P<project_id>\d+)/edit$', method_splitter, {'GET':   project_edit, 'PATCH': project_update}),
 
     url(r'^projectwizard/$', ProjectWizard.as_view([ProjectNameForm, ProjectPriceForm]), name='project_wizard'),
     # Examples:
