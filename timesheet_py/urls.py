@@ -1,9 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
-
 from django.contrib.auth.views import *
 from timesheet.views import *
 from timesheet.forms import *
-
 from common.url_helpers import *
 
 # Uncomment the next two lines to enable the admin:
