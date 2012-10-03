@@ -17,6 +17,8 @@ class Project:
 
     def project_list(self):
         self.__projects = fetchall("select * from projects where user_id = %s", (self.user_id,))
+        for i, proj in enumerate(self.__projects):
+            self.__projects[i] = dict(proj.items() + {'current_time': (proj['current_time'] / 60 / 60.0)}.items())
         return self.__projects
 
     def project(self, project_id):
@@ -58,12 +60,13 @@ class Project:
         started_at = current_project['started_at']
         stopped_at = int(time.time())
         diff = (stopped_at - started_at)
+
         old_current_time = current_project['current_time'] if (current_project['current_time'] > 0.0) else 0.0
-        project_current_time = (old_current_time + diff) / 60 / 60.0
+        new_current_time = (old_current_time + diff)
 
         updated_project_rows = dbexec("update projects set "
                 "started_at = 0, `current_time` = %s where id = %s",
-                (project_current_time, project_id))
+                (new_current_time, project_id))
         if updated_project_rows > 0.0:
             updated_tracked_rows = dbexec("insert into tracked_times "
                     "(project_id, started_at, stopped_at, diff) values "
