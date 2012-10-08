@@ -25,6 +25,9 @@ h2 {
 table.project-list td {
   padding: 0.5em 1em;
 }
+table.project-list tr td:first-child {
+  white-space: nowrap;
+}
 
 @media (max-width: 979px) {
   .hero-unit h1, h1 {

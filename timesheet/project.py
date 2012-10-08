@@ -29,7 +29,6 @@ class Project:
 
     def started(self):
         if self.__projects == None:
-            print "not using cached project list"
             self.__projects = self.project_list()
         for project in self.__projects:
             if project["started_at"] > 0:
@@ -76,51 +75,71 @@ class Project:
                 return 1
         return 0
 
-    def tracked_times(self, project_id):
+    def tracked_times(self, project_id, entries = False):
         project = self.project(project_id)
         if project == None:
             return (None, None, None)
         rows = fetchall("select * from tracked_times where project_id = %s order by stopped_at desc",
                 (project_id,))
 
+        # calculate total based on tracked_times; NOT the cached de-normalized value from `projects`
         total = 0.0
         result = {}
-
+        has_result = False
         for row in rows:
             d = datetime.fromtimestamp(row['started_at'])
             iso_tuple = d.isocalendar()
             week = "w%s" % iso_tuple[1]
-            if (week not in result):
-                result[week] = []
-
-            row['hour_diff'] = row['diff'] / 60.0 / 60.0
-            result[week].append(row)
-            total = total + row['diff']
-
+            if (entries == False or ("{0}".format(row["id"]) in entries)):
+                if (week not in result):
+                    result[week] = []
+                row['hour_diff'] = row['diff'] / 60.0 / 60.0
+                result[week].append(row)
+                total = total + row['diff']
+                has_result = True
         total = total / 60.0 / 60.0
-        return (project, total, result)
+
+        if has_result:
+            return (project, total, result)
+        else:
+            print "no entries in list"
+            return (None, None, None)
 
     def delete(self, project_id):
         deleted_projects = dbexec("delete from projects where id = %s and user_id = %s",
                 (project_id, self.user_id))
         return 1 if deleted_projects > 0 else 0
 
-    def archive_tracked_times(self, project_id, period):
-        (project, total, tracked_times)= self.tracked_times(project_id)
-        if project == None:
+    def archive_tracked_times(self, project_id, period, entries):
+        (project, total, tracked_times)= self.tracked_times(project_id, entries)
+        if project == None or len(period) < 1:
             return 0
 
         total_time = total * 60.0 * 60.0 # better save it in seconds
         total_sum = total * project["price"]
+
+        # collect all the ids of the tracked_times entries
+        tt_ids = []
+        for k,week in tracked_times.items():
+            tt_ids = tt_ids + [row["id"] for row in week]
+
+        if len(tt_ids) <= 0:
+            print "not archive any tracked_times rows? {0}, {1}".format(project_id, period)
+            return 0
+
+        # insert summurize as one row into archive
         dbexec("insert into archived_history (project_id, period, total_time, total_sum, period_data) VALUES "
                 "(%s, %s, %s, %s ,%s)",
                 (project_id, period, total_time, total_sum, pickle.dumps(tracked_times)))
-        dbexec("delete from tracked_times where project_id = %s", (project_id,))
+
+        # only delete the specified rows
+        sql = "delete from tracked_times where project_id = %s and id in({0})".format(",".join(map(str, tt_ids)))
+        dbexec(sql, (project_id,))
         dbexec("update projects set `current_time` = 0 where id = %s", (project_id,))
+        return 1
 
     def archive_list(self, project_id):
         project = self.project(project_id)
-        print "project: %s" % project
         if project == None:
             return []
         return fetchall("select * from archived_history where project_id = %s",

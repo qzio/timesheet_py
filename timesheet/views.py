@@ -29,7 +29,7 @@ def projects_start(request, project_id):
     msg = "failed to start project"
     if (p.start_tracking(int(project_id))):
         msg = "successfully started tracking project"
-    return redirect("/?msg=%s" % (msg,))
+    return redirect("/?flash=%s" % (msg,))
 
 
 def projects_stop(request, project_id):
@@ -39,15 +39,17 @@ def projects_stop(request, project_id):
     msg = "Failed to stop tracking time"
     if (p.stop_tracking(int(project_id))):
         msg = "successfully stopped tracking time"
-    return redirect("/?msg=%s" % msg)
+    return redirect("/?flash=%s" % msg)
 
 def projects_history(request, project_id):
     if (not request.user.is_authenticated()):
         return redirect('/login')
     p = Project(request.user.id)
     (project, total_diff, history) = p.tracked_times(int(project_id))
+    f = request.GET.get("flash","")
     if project is not None:
         ctx = RequestContext(request, {
+                             "flash":f,
                              "project" : project,
                              "history" : history,
                              "total_diff":total_diff
@@ -70,16 +72,26 @@ def projects_archive(request, project_id):
     if (not request.user.is_authenticated()):
         return redirect('/login')
     p = Project(request.user.id)
-    p.archive_tracked_times(int(project_id), request.POST["period"])
-    msg = "Archived tracked time for project %s" % project_id
-    return redirect("/?flash=%s" % msg)
+
+    if p.archive_tracked_times(int(project_id), request.POST["period"], request.POST.getlist("entries")):
+        msg = "Archived tracked time for project %s" % project_id
+        return redirect("/?flash={0}".format(msg))
+    else:
+        msg = "Failed to archive {0}".format(project_id)
+        return redirect("/projects/{0}/history?flash={1}".format(project_id, msg))
 
 def projects_archive_list(request, project_id):
     if (not request.user.is_authenticated()):
         return redirect('/login')
     p = Project(request.user.id)
     archive = p.archive_list(project_id)
-    return render_to_response('archive.html', {"archive":archive})
+    f = request.GET.get("flash","")
+    ctx = RequestContext(request, {
+                         "flash":f,
+                         "project_id":project_id,
+                         "archive":archive,
+                         })
+    return render_to_response('archive.html', ctx)
 
 def project_edit(request, project_id):
     p = Project(request.user.id)
