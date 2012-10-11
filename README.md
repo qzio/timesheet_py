@@ -10,8 +10,6 @@
 
 - track time by only one project at the time.
 
-- portability (sqlite3)
-
 - summarize by week
 
 
@@ -24,5 +22,7 @@
   - faceoobk
   - twitter
   - google
+
+- when archiving show simple base invoice material
 
 - ...?
