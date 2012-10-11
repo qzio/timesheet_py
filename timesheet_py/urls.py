@@ -4,10 +4,6 @@ from timesheet.views import *
 from timesheet.forms import *
 from common.url_helpers import *
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
 urlpatterns = patterns('',
     url(r'^$', 'timesheet.views.home', name='home'),
     url(r'^accounts/profile/$', 'timesheet.views.home'),
