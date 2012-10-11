@@ -11,6 +11,7 @@
             {% for entry in entries %}
                 <div>
                     <input type="checkbox" name="entries" value="{{ entry.id }}"/>
+                    {{ entry.started_at|timestamp|date:"d, M" }};
                     {{ entry.started_at|timestamp|date:"H:i" }} -
                     {{ entry.stopped_at|timestamp|date:"H:i" }} =
                     {{ entry.hour_diff|floatformat:2 }}h
