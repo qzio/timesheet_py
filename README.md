@@ -22,7 +22,6 @@
   - faceoobk
   - twitter
   - google
-
-- when archiving show simple base invoice material
+  - when archiving show simple base invoice material
 
 - ...?
