@@ -8,11 +8,11 @@
         <td class="hidden-phone">[{{ project.price }}]</td>
         <td>
           {% if project_started == project.id %}
-          <form action="{% url projects_stop project.id %}" method="post">{% csrf_token %}
+            <form action="{% url 'projects_stop' project.id %}" method="post">{% csrf_token %}
               <input class="btn" value="Stop" type="submit"/>
             </form>
           {% elif  project_started == None %}
-            <form action="{% url projects_start project.id %}" method="post">{% csrf_token %}
+            <form action="{% url 'projects_start' project.id %}" method="post">{% csrf_token %}
               <input class="btn" value="Start" type="submit"/>
             </form>
           {% else %}
