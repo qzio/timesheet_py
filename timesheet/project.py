@@ -37,8 +37,8 @@ class Project:
 
 
     def create_project(self, data):
-        return dbexec("insert into projects (user_id, name, price, started_at) "
-            "values (%s, %s, %s, 0)",
+        return dbexec("insert into projects (user_id, name, price, started_at, `current_time`) "
+            "values (%s, %s, %s, 0, 0)",
             (self.user_id, data["name"], data["price"]))
 
     def start_tracking(self, project_id):
