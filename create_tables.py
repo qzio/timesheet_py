@@ -2,9 +2,13 @@ import sqlite3
 
 connection = sqlite3.connect("db.sqlite3")
 
+"""
+Note: If you plan to use mySQL or other,
+remember to add auto_increment to the id fields of tracked_times and projects.
+"""
 tables = [
     "CREATE TABLE projects "
-    "(id integer primary key, user_id integer, name varchar(255), price integer, started_at integer, current_time integer)",
+    "(id integer primary key, user_id integer, name varchar(255), price integer, started_at integer, `current_time` integer)",
 
     " CREATE TABLE tracked_times "
     "(id integer primary key, project_id integer, started_at integer, stopped_at integer, diff integer)",
